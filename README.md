@@ -8,6 +8,12 @@ Using cache to serve content is usually only beneficial if you have a high traff
 A cache setup will not help your server get faster, but it will help prevent overloading it.
 It is not a cure if your website is slow without much traffic.
 
+## Installation
+
+1. First create the `mu-plugins` directory inside `wp-content` if it does not exist yet.
+1. Copy `nginx-fullpage-cache.php` into the `wp-content/mu-plugins/` directory.
+
+
 ## Development
 This plugin has been developed by [Driv Digital](https://www.drivdigital.no).  
 The development has been funded by [Raskesider.no](https://www.raskesider.no) and [Norgeshandelen.no](https://www.norgeshandelen.no)
