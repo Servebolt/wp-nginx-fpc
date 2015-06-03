@@ -19,7 +19,7 @@ class Nginx_Fullpage_Cache {
   static function set_headers( $posts ) {
     // No cache for logged in users
     if ( is_user_logged_in() ) {
-      setcookie( "no_cache", 1, time() + 3600, COOKIEPATH, COOKIE_DOMAIN );
+      setcookie( "no_cache", 1, $_SERVER['REQUEST_TIME'] + 3600, COOKIEPATH, COOKIE_DOMAIN );
     }
     // Set no-cache for all admin pages
     if ( is_admin() || is_user_logged_in() ) {
