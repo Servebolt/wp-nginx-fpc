@@ -1,6 +1,7 @@
 <?php
 class Nginx_Fullpage_Cache {
-  static function init_plugin() {
+  static function setup() {
+    require_once 'class/class.nginx-fpc-interface.php';
     add_filter( 'posts_results', array( 'Nginx_Fullpage_Cache', 'set_headers' ) );
   }
 
@@ -9,6 +10,10 @@ class Nginx_Fullpage_Cache {
    * Determine and set the type of headers to be used
    */
   static function set_headers( $posts ) {
+    if ( is_admin() ) {
+      nocache_headers();
+      return $posts;
+    }
     // Only trigger this function once.
     remove_filter( 'posts_results', 'nginx_cache_headers' );
 
@@ -17,17 +22,19 @@ class Nginx_Fullpage_Cache {
       // Loop through selected posts
       foreach ( $posts as $post ) {
         // Check if cache is disabled for the post
-        if ( 'no' === get_post_meta( $post->ID, '_cache-on', true ) ) {
+        if ( 'off' === get_post_meta( $post->ID, '_nginx_fpc', true ) ) {
           // Disable caching for this page
-          self::no_cache_headers();
+          nocache_headers();
           return $posts;
         }
       }
     }
-
-
-
-    self::cache_headers();
+    if ( is_singular() || is_page() || is_archive() ) {
+      self::cache_headers();
+    }
+    else {
+      self::no_cache_headers();
+    }
     return $posts;
   }
 
@@ -55,4 +62,4 @@ class Nginx_Fullpage_Cache {
   }
 }
 
-Nginx_Fullpage_Cache::init_plugin();
+Nginx_Fullpage_Cache::setup();
