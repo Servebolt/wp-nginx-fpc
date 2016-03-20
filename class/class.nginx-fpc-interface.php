@@ -100,11 +100,11 @@ class Nginx_Fpc_Interface {
     );
 
     $settings = [
-      'text_api_key'        => __( 'BitSled.com API key', 'nginx-fpc' ),
+      'text_api_key'        => __( 'Servebolt.com API key', 'nginx-fpc' ),
       // API Secret is not yet implemented
-      // 'text_api_secret'     => __( 'BitSled.com API secret', 'nginx-fpc' ),
+      // 'text_api_secret'     => __( 'Servebolt.com API secret', 'nginx-fpc' ),
       // Developer mode (pagespeed) [on|off] is not yet implemented
-      // 'checkbox_devmode'    => __( 'BitSled.com Developer mode', 'nginx-fpc' ),
+      // 'checkbox_devmode'    => __( 'Servebolt.com Developer mode', 'nginx-fpc' ),
       // Button for flushing tengine cache
       // 'button_flush_cache'    => __( 'Flush cache', 'nginx-fpc' ),
       'select_cache_status'   => __( 'Cache type', 'nginx-fpc' ),
@@ -273,7 +273,7 @@ class Nginx_Fpc_Interface {
 
   /**
    * Get the api key
-   * @return string BitSled API key
+   * @return string Servebolt API key
    */
   static function get_api_key() {
     // Get the plugin options

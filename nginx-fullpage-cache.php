@@ -78,6 +78,8 @@ class Nginx_Fullpage_Cache {
     header_remove( 'Cache-Control' );
     header_remove( 'Pragma' );
     header_remove( 'Expires' );
+    // Allow browser to cache content for 1 hour
+    header( 'Cache-Control: max-age=3600,public' );
     header( 'Pragma: public' );
     header( 'Cache-Plugin: active' );
     header( 'Cache-Post-Type: '. implode( ',', self::$post_types ) );
@@ -88,7 +90,7 @@ class Nginx_Fullpage_Cache {
    * Print headers that prevent caching
    */
   static function no_cache_headers() {
-    header( 'Cache-Control:max-age=0, no-cache' );
+    header( 'Cache-Control: max-age=0,no-cache' );
     header( 'Pragma: no-cache' );
     header( 'Cache-Plugin: pending' );
   }
