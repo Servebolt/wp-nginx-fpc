@@ -1,5 +1,5 @@
 {
-    "name": "servebolt/wp-nginx-fpc",
+    "name": "thoaud/wp-nginx-fpc",
     "type": "wordpress-muplugin",
     "require": {
         "composer/installers": "*"
