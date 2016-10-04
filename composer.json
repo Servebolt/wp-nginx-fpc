@@ -1,0 +1,7 @@
+{
+    "name": "servebolt/wp-nginx-fpc",
+    "type": "wordpress-muplgin",
+    "require": {
+        "composer/installers": "*"
+    }
+}
