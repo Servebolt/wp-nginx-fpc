@@ -29,11 +29,13 @@ You must verify that checkout, login, cart and other dyamic functionality behave
 
 ### Important when deploying using composer
 Add the following to your projects composer.json to ensure that the plugin installs in the correct folder
-```"extra": {
+```
+"extra": {
     "installer-paths": {
     	"wp-content/mu-plugins": ["servebolt/wp-nginx-fpc"]
     	}
-    }```
+    }
+```
 
 ## Development
 This plugin has been developed by [Driv Digital](https://www.drivdigital.no) and is funded by [Servebolt.com](https://servebolt.com)
