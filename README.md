@@ -27,5 +27,15 @@ You must verify that checkout, login, cart and other dyamic functionality behave
 1. Copy `nginx-fullpage-cache.php` and the `class` folder into the `wp-content/mu-plugins/` directory.
 1. Activate Full Page Caching in the Servebolt.com control panel, by setting `Enable caching of static files` to `All` under the section `Front End Caching`
 
+### Important when deploying using composer
+Add the following to your projects composer.json to ensure that the plugin installs in the correct folder
+```
+"extra": {
+    "installer-paths": {
+    	"wp-content/mu-plugins": ["servebolt/wp-nginx-fpc"]
+    	}
+    }
+```
+
 ## Development
 This plugin has been developed by [Driv Digital](https://www.drivdigital.no) and is funded by [Servebolt.com](https://servebolt.com)
