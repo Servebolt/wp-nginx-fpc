@@ -10,9 +10,7 @@ It is not a cure if your website is slow without much traffic.
 
 ## Installation
 
-1. First create the `mu-plugins` directory inside `wp-content` if it does not exist yet.
-1. Copy `nginx-fullpage-cache.php` into the `wp-content/mu-plugins/` directory.
-
+Installs as a normal wp-plugin
 
 ## Development
 This plugin has been developed by [Driv Digital](https://www.drivdigital.no).  
