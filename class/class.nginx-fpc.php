@@ -1,15 +1,12 @@
 <?php
-class Nginx_Fullpage_Cache {
+class Nginx_Fpc {
   static $post_types = [];
   /**
    * Setup
    */
   static function setup() {
-    // Include the interface
-    require_once 'class/class.nginx-fpc-interface.php';
-
     // Attach the method for setting cache headers
-    add_filter( 'posts_results', array( 'Nginx_Fullpage_Cache', 'set_headers' ) );
+    add_filter( 'posts_results', __CLASS__.'::set_headers' );
   }
 
   /**
@@ -114,6 +111,3 @@ class Nginx_Fullpage_Cache {
     return $post_types;
   }
 }
-
-// Start the plugin
-Nginx_Fullpage_Cache::setup();
