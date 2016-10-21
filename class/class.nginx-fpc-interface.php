@@ -14,12 +14,12 @@ class Nginx_Fpc_Interface {
    */
   static function setup() {
     // Add a checkbox for every post
-    add_action( 'post_submitbox_start', 'Nginx_Fpc_Interface::cache_checkbox' );
-    add_action( 'save_post', 'Nginx_Fpc_Interface::cache_checkbox_submit', 100, 1 );
+    add_action( 'post_submitbox_start', __CLASS__.'::cache_checkbox' );
+    add_action( 'save_post', __CLASS__.'::cache_checkbox_submit', 100, 1 );
 
     // Add a settings page for cache settings
-    add_action( 'admin_menu', 'Nginx_Fpc_Interface::add_admin_menu' );
-    add_action( 'admin_init', 'Nginx_Fpc_Interface::settings_init' );
+    add_action( 'admin_menu', __CLASS__.'::add_admin_menu' );
+    add_action( 'admin_init', __CLASS__.'::settings_init' );
   }
 
   /**
@@ -28,7 +28,7 @@ class Nginx_Fpc_Interface {
   static function cache_checkbox() {
     $post = get_post();
     // Only for allowed post-types
-    if ( !in_array( $post->post_type, Nginx_Fullpage_Cache::cacheable_post_types() ) ) {
+    if ( !in_array( $post->post_type, Nginx_Fpc::cacheable_post_types() ) ) {
       return;
     }
 
@@ -41,15 +41,19 @@ class Nginx_Fpc_Interface {
   <?php
   }
 
+  /**
+   * Cache checkbox submit
+   * @param  int $post_id
+   */
   static function cache_checkbox_submit( $post_id ) {
     $post = get_post( $post_id );
     // Only for allowed post-types
-    if ( !in_array( $post->post_type, Nginx_Fullpage_Cache::cacheable_post_types() ) ) {
+    if ( ! in_array( $post->post_type, Nginx_Fpc::cacheable_post_types() ) ) {
       return;
     }
 
     // Make sure the request was not triggered from the quick edit form
-    if ( !isset( $_POST['nginx-fpc-confirm'] ) ) {
+    if ( ! isset( $_POST['nginx-fpc-confirm'] ) ) {
       return;
     }
 
@@ -64,7 +68,6 @@ class Nginx_Fpc_Interface {
       add_post_meta( $post_id, '_nginx_fpc', $sync ? 'on' : 'off' );
     }
   }
-
 
   /**
    * Add an admin menu item (under "Settings")
@@ -88,23 +91,24 @@ class Nginx_Fpc_Interface {
    * Settings init
    * Initialise settings and run submit handling
    */
-  static function settings_init(  ) {
+  static function settings_init() {
+    $vhost_id = self::get_vhost_number();
     register_setting( 'nginx-fpc-options-page', 'fpc_settings' );
 
     // Add a section for the fpc settings
     add_settings_section(
       'nginx-fpc-section',
-      __( 'Cache settings', 'nginx-fpc' ),
+      __( 'Cache settings for ', 'nginx-fpc' ) ." $vhost_id",
       'Nginx_Fpc_Interface::settings_section_callback',
       'nginx-fpc-options-page'
     );
 
     $settings = [
-      'text_api_key'        => __( 'BitSled.com API key', 'nginx-fpc' ),
+      'text_api_key'        => __( 'Servebolt.com API key', 'nginx-fpc' ),
       // API Secret is not yet implemented
-      // 'text_api_secret'     => __( 'BitSled.com API secret', 'nginx-fpc' ),
+      // 'text_api_secret'     => __( 'Servebolt.com API secret', 'nginx-fpc' ),
       // Developer mode (pagespeed) [on|off] is not yet implemented
-      // 'checkbox_devmode'    => __( 'BitSled.com Developer mode', 'nginx-fpc' ),
+      // 'checkbox_devmode'    => __( 'Servebolt.com Developer mode', 'nginx-fpc' ),
       // Button for flushing tengine cache
       // 'button_flush_cache'    => __( 'Flush cache', 'nginx-fpc' ),
       'select_cache_status'   => __( 'Cache type', 'nginx-fpc' ),
@@ -273,7 +277,7 @@ class Nginx_Fpc_Interface {
 
   /**
    * Get the api key
-   * @return string BitSled API key
+   * @return string Servebolt API key
    */
   static function get_api_key() {
     // Get the plugin options
