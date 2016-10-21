@@ -364,5 +364,3 @@ class Nginx_Fpc_Interface {
   }
 
 }
-
-Nginx_Fpc_Interface::setup();
