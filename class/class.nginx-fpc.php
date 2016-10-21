@@ -6,7 +6,18 @@ class Nginx_Fpc {
    */
   static function setup() {
     // Attach the method for setting cache headers
+    add_filter( 'admin_init', __CLASS__.'::set_headers' );
     add_filter( 'posts_results', __CLASS__.'::set_headers' );
+    add_filter( 'template_include', __CLASS__.'::last_call' );
+  }
+
+  /**
+   * Last call
+   * Run a last call to the set headers function before the template is loaded
+   */
+  static function last_call( $template ) {
+    self::set_headers([get_post()]);
+    return $template;
   }
 
   /**
@@ -14,26 +25,37 @@ class Nginx_Fpc {
    * Determine and set the type of headers to be used
    */
   static function set_headers( $posts ) {
-    // No cache for logged in users
-    if ( is_user_logged_in() ) {
-      setcookie( "no_cache", 1, $_SERVER['REQUEST_TIME'] + 3600, COOKIEPATH, COOKIE_DOMAIN );
-    }
-    // Set no-cache for all admin pages
-    if ( is_admin() || is_user_logged_in() ) {
-      nocache_headers();
+    global $wp_query;
+    static $already_set = false;
+    if ( $already_set ) {
       return $posts;
     }
+    $already_set = true;
+    // Set no-cache for all admin pages
+    if ( is_admin() || is_user_logged_in() ) {
+      self::no_cache_headers();
+      // No cache cookie for logged in users
+      if ( is_user_logged_in() ) {
+        setcookie( "no_cache", 1, $_SERVER['REQUEST_TIME'] + 3600, COOKIEPATH, COOKIE_DOMAIN );
+      }
+      return $posts;
+    }
+
+    if ( ! isset( $wp_query ) || ! get_post_type() ) {
+      $already_set = false;
+      return $posts;
+    }
+
     // Only trigger this function once.
-    remove_filter( 'posts_results', 'nginx_cache_headers' );
+    remove_filter( 'posts_results', __CLASS__.'::set_headers' );
 
-
-    if ( ( is_singular() || is_page() ) && in_array( get_post_type(), self::cacheable_post_types() ) ) {
+    if ( ( is_front_page() || is_singular() || is_page() ) && in_array( get_post_type(), self::cacheable_post_types() ) ) {
 
       // Check if cache is disabled for the post
       foreach ( $posts as $post ) {
         if ( 'off' === get_post_meta( $post->ID, '_nginx_fpc', true ) ) {
           // Disable caching for this page / post
-          nocache_headers();
+          self::no_cache_headers();
           return $posts;
         }
       }
@@ -76,8 +98,7 @@ class Nginx_Fpc {
     header_remove( 'Pragma' );
     header_remove( 'Expires' );
     header( 'Pragma: public' );
-    header( 'Cache-Plugin: active' );
-    header( 'Cache-Post-Type: '. implode( ',', self::$post_types ) );
+    header( 'X-Cache-Plugin: active' );
   }
 
   /**
@@ -87,7 +108,7 @@ class Nginx_Fpc {
   static function no_cache_headers() {
     header( 'Cache-Control:max-age=0, no-cache' );
     header( 'Pragma: no-cache' );
-    header( 'Cache-Plugin: pending' );
+    header( 'X-Cache-Plugin: active' );
   }
 
   /**
@@ -101,7 +122,9 @@ class Nginx_Fpc {
     $options = get_option( 'fpc_settings' );
     if ( isset( $options['fpc_post_types'] ) ) {
       // Parse comma separated list into an array
-      $post_types = explode( ',', $options['fpc_post_types'] );
+      $fpc_post_types = $options['fpc_post_types'];
+      $fpc_post_types = str_replace( "\n", ',', $fpc_post_types );
+      $post_types = explode( ',', $fpc_post_types );
       foreach ( $post_types as &$post_type ) {
         $post_type = trim( $post_type );
       }
