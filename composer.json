@@ -1,0 +1,19 @@
+{
+  "name": "drivdigital/wordpress-nginx-fullpage-cache",
+  "description": "",
+  "type": "wordpress-plugin",
+  "extra": {
+    "installer-name": "wordpress-nginx-fullpage-cache"
+  },
+  "authors": [
+    {
+      "name": "Driv Digital",
+      "email": "post@drivdigital.no"
+    },
+    {
+      "name": "Eivin Landa",
+      "email": "landa@drivdigital.no"
+    }
+  ],
+  "minimum-stability": "dev"
+}
