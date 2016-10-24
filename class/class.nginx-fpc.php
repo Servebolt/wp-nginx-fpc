@@ -97,7 +97,11 @@ class Nginx_Fpc {
     header_remove( 'Cache-Control' );
     header_remove( 'Pragma' );
     header_remove( 'Expires' );
+    // Allow browser to cache content for 10 minutes
+    header( 'Cache-Control:max-age=600, public' );
     header( 'Pragma: public' );
+    // Expire in front-end caches and proxies after 10 minutes
+    header( 'Expires: '. gmdate('D, d M Y H:i:s', $_SERVER['REQUEST_TIME'] + 600) .' GMT');
     header( 'X-Cache-Plugin: active' );
   }
 
@@ -106,7 +110,7 @@ class Nginx_Fpc {
    * Print headers that prevent caching
    */
   static function no_cache_headers() {
-    header( 'Cache-Control:max-age=0, no-cache' );
+    header( 'Cache-Control: max-age=0,no-cache' );
     header( 'Pragma: no-cache' );
     header( 'X-Cache-Plugin: active' );
   }

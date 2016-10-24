@@ -1,7 +1,10 @@
 {
-  "name": "drivdigital/wordpress-nginx-fullpage-cache",
-  "description": "",
+  "name": "servebolt/wp-nginx-fpc",
   "type": "wordpress-plugin",
+  "require": {
+      "composer/installers": "*"
+  },
+  "description": "",
   "extra": {
     "installer-name": "wordpress-nginx-fullpage-cache"
   },
